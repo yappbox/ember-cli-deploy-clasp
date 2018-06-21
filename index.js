@@ -24,7 +24,9 @@ module.exports = {
        */
 
       defaultConfig: {
-        distDir: 'dist'
+        distDir: function(context) {
+          return context.distDir;
+        }
       },
       requiredConfig: ['distDir'],
 
