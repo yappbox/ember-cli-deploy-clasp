@@ -16,7 +16,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "detect-installed": "^2.0.4",
     "ember-cli-deploy-plugin": "^0.2.9",
     "rsvp": "^3.5.0"
   },
