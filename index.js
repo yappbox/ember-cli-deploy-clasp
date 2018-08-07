@@ -43,10 +43,12 @@ module.exports = {
         claspConfigFiles.forEach((configFile) => {
           var claspProjectDir = path.dirname(configFile);
           process.chdir(claspProjectDir);
-          this.log(`Running \`clasp push\` in ${claspProjectDir}`);
+          this.log(`Running \`clasp push\` and \`clasp version\` in ${claspProjectDir}`);
           var claspPromise = execFile('clasp', ['push']).then(({ stdout }/*, stderr*/) => {
             this.log(stdout);
-          });
+          }).then(() => execFile('clasp', ['version']).then(({ stdout }/*, stderr*/) => {
+            this.log(stdout);
+          }));
           promises.push(claspPromise);
         });
         return Promise.all(promises);
