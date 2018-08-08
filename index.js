@@ -6,6 +6,7 @@ const glob = require('glob');
 const util = require('util');
 const path = require('path');
 const execFile = util.promisify(require('child_process').execFile);
+const fs = require('fs');
 
 //const RSVP = require('rsvp');
 const DeployPluginBase = require('ember-cli-deploy-plugin');
@@ -48,7 +49,12 @@ module.exports = {
             this.log(stdout);
           }).then(() => execFile('clasp', ['version']).then(({ stdout }/*, stderr*/) => {
             this.log(stdout);
-          }));
+          })).then(() => {
+            if (fs.existsSync('.upload-message')) {
+              var uploadMessage = fs.readFileSync('.upload-message', 'utf8');
+              this.log(`\x1b[33m${uploadMessage}\x1b[0m`);
+            }
+          });
           promises.push(claspPromise);
         });
         return Promise.all(promises);
