@@ -45,10 +45,15 @@ module.exports = {
           var claspProjectDir = path.dirname(configFile);
           process.chdir(claspProjectDir);
           this.log(`Running \`clasp push\` and \`clasp version\` in ${claspProjectDir}`);
-          var claspPromise = execFile('clasp', ['push']).then(({ stdout }/*, stderr*/) => {
+          var claspPromise = execFile('clasp', ['push', '-f']).then(({ stdout , stderr }) => {
             this.log(stdout);
-          }).then(() => execFile('clasp', ['version']).then(({ stdout }/*, stderr*/) => {
+            this.log(stderr);
+            if (stderr && stderr.includes('Push failed')) {
+              throw new Error(stderr);
+            }
+          }).then(() => execFile('clasp', ['version', '"Pushed by ember-cli-deploy-clasp"']).then(({ stdout , stderr }) => {
             this.log(stdout);
+            this.log(stderr);
           })).then(() => {
             if (fs.existsSync('.upload-message')) {
               var uploadMessage = fs.readFileSync('.upload-message', 'utf8');
